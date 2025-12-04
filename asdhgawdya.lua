@@ -11,9 +11,21 @@ local Knit = require(Shared.Packages.Knit)
 local PlayerController = Knit.GetController("PlayerController")
 local Replica = PlayerController.Replica
 
+-- ฟังก์ชันดึง Level
+local function GetPlayerLevel(Replica)
+    if not Replica or not Replica.Data then
+        return 0
+    end
+
+    return
+        Replica.Data.Level or
+        (Replica.Data.PlayerStats and Replica.Data.PlayerStats.Level) or
+        (Replica.Data.Stats and Replica.Data.Stats.Level) or
+        0
+end
+
 local Pickaxes = {}
 local Gold
-
 local triggered = false
 
 local TargetPickaxes = {}
@@ -23,13 +35,13 @@ end
 
 while true do
     Gold = Replica.Data.Gold or 0
+    local Level = GetPlayerLevel(Replica)
 
     for _, item in pairs(Replica.Data.Inventory.Equipments) do
         if typeof(item) == "table" then
             if Equipments.Items.Pickaxe[item.Name] then
                 table.insert(Pickaxes, item.Name)
 
-                -- 🟣 ตรวจตามชื่อที่กำหนดเอง
                 if TargetPickaxes[item.Name] and not triggered then
                     triggered = true
                     if _G.Horst_AccountChangeDone then
@@ -42,7 +54,8 @@ while true do
 
     _G.Horst_SetDescription(
         "⛏️ Pickaxes: " .. table.concat(Pickaxes, ", ") ..
-        ", 💰 Gold: " .. string.format("%d", Gold)
+        ", 💰 Gold: " .. string.format("%d", Gold) ..
+        ", ⭐ Level: " .. tostring(Level)
     )
 
     table.clear(Pickaxes)
