@@ -11,7 +11,7 @@ local Knit = require(Shared.Packages.Knit)
 local PlayerController = Knit.GetController("PlayerController")
 local Replica = PlayerController.Replica
 
--- ฟังก์ชันดึง Level
+-- 🟦 ดึง Level
 local function GetPlayerLevel(Replica)
     if not Replica or not Replica.Data then
         return 0
@@ -24,8 +24,19 @@ local function GetPlayerLevel(Replica)
         0
 end
 
+-- 🟦 แปลงตัวเลขเป็น k, M, B, T, Q
+local suffixes = {"", "K", "M", "B", "T", "Q", "Qi", "Sx", "Sp", "O", "N", "D"}
+local function FormatNumber(num)
+    if type(num) ~= "number" then return tostring(num) end
+    local i = 1
+    while num >= 1000 and i < #suffixes do
+        num = num / 1000
+        i = i + 1
+    end
+    return string.format("%.2f", num) .. suffixes[i]
+end
+
 local Pickaxes = {}
-local Gold
 local triggered = false
 
 local TargetPickaxes = {}
@@ -34,19 +45,18 @@ for _, name in ipairs(_G.DataConfigs.Pickaxe or {}) do
 end
 
 while true do
-    Gold = Replica.Data.Gold or 0
+    local Gold = Replica.Data.Gold or 0
     local Level = GetPlayerLevel(Replica)
+    local Race = Replica.Data.Race or "Unknown"
 
     for _, item in pairs(Replica.Data.Inventory.Equipments) do
-        if typeof(item) == "table" then
-            if Equipments.Items.Pickaxe[item.Name] then
-                table.insert(Pickaxes, item.Name)
+        if typeof(item) == "table" and Equipments.Items.Pickaxe[item.Name] then
+            table.insert(Pickaxes, item.Name)
 
-                if TargetPickaxes[item.Name] and not triggered then
-                    triggered = true
-                    if _G.Horst_AccountChangeDone then
-                        _G.Horst_AccountChangeDone()
-                    end
+            if TargetPickaxes[item.Name] and not triggered then
+                triggered = true
+                if _G.Horst_AccountChangeDone then
+                    _G.Horst_AccountChangeDone()
                 end
             end
         end
@@ -54,8 +64,9 @@ while true do
 
     _G.Horst_SetDescription(
         "⛏️ Pickaxes: " .. table.concat(Pickaxes, ", ") ..
-        ", 💰 Gold: " .. string.format("%d", Gold) ..
-        ", ⭐ Level: " .. tostring(Level)
+        ", 💰 Gold: " .. FormatNumber(Gold) ..
+        ", ⭐ Level: " .. tostring(Level) ..
+        ", 👤 Race: " .. tostring(Race)
     )
 
     table.clear(Pickaxes)
