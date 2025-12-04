@@ -11,7 +11,6 @@ local Knit = require(Shared.Packages.Knit)
 local PlayerController = Knit.GetController("PlayerController")
 local Replica = PlayerController.Replica
 
--- 🟦 ดึง Level
 local function GetPlayerLevel(Replica)
     if not Replica or not Replica.Data then
         return 0
@@ -24,7 +23,6 @@ local function GetPlayerLevel(Replica)
         0
 end
 
--- 🟦 แปลงตัวเลขเป็น k, M, B, T, Q
 local suffixes = {"", "K", "M", "B", "T", "Q", "Qi", "Sx", "Sp", "O", "N", "D"}
 local function FormatNumber(num)
     if type(num) ~= "number" then return tostring(num) end
