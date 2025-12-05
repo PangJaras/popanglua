@@ -13,10 +13,7 @@ local Replica = PlayerController.Replica
 repeat task.wait() until Replica and Replica.Data and Replica.Data.Inventory
 
 getgenv().LOADED = true
-print("\27[32m========================")
-print("      LOADED = true      ")
-print("========================\27[0m")
-
+warn("[", os.date("%H:%M:%S"), "] LOADED = true")
 
 local function GetPlayerLevel(Replica)
     if not Replica or not Replica.Data then
