@@ -13,7 +13,9 @@ local Replica = PlayerController.Replica
 repeat task.wait() until Replica and Replica.Data and Replica.Data.Inventory
 
 getgenv().LOADED = true
-print("LOADED = true")
+print("\27[32m========================")
+print("      LOADED = true      ")
+print("========================\27[0m")
 
 
 local function GetPlayerLevel(Replica)
