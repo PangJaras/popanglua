@@ -10,6 +10,12 @@ local Knit = require(Shared.Packages.Knit)
 local PlayerController = Knit.GetController("PlayerController")
 local Replica = PlayerController.Replica
 
+repeat task.wait() until Replica and Replica.Data and Replica.Data.Inventory
+
+getgenv().LOADED = true
+print("LOADED = true")
+
+
 local function GetPlayerLevel(Replica)
     if not Replica or not Replica.Data then
         return 0
