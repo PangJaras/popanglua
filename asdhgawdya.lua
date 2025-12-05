@@ -28,6 +28,7 @@ local function GetPlayerLevel(Replica)
 end
 
 local suffixes = {"", "K", "M", "B", "T", "Q", "Qi", "Sx", "Sp", "O", "N", "D"}
+
 local function FormatNumber(num)
     if type(num) ~= "number" then return tostring(num) end
     local i = 1
@@ -38,28 +39,44 @@ local function FormatNumber(num)
     return string.format("%.2f", num) .. suffixes[i]
 end
 
-local Pickaxes = {}
-local triggered = false
-
 local TargetPickaxes = {}
 for _, name in ipairs(_G.DataConfigs.Pickaxe or {}) do
     TargetPickaxes[name] = true
 end
+
+local triggered = false
+local Pickaxes = {}
 
 while true do
     local Gold = Replica.Data.Gold or 0
     local Level = GetPlayerLevel(Replica)
     local Race = Replica.Data.Race or "Unknown"
 
+    local FoundPickaxes = {}
+
     for _, item in pairs(Replica.Data.Inventory.Equipments) do
         if typeof(item) == "table" and Equipments.Items.Pickaxe[item.Name] then
             table.insert(Pickaxes, item.Name)
 
-            if TargetPickaxes[item.Name] and not triggered then
-                triggered = true
-                if _G.Horst_AccountChangeDone then
-                    _G.Horst_AccountChangeDone()
-                end
+            if TargetPickaxes[item.Name] then
+                FoundPickaxes[item.Name] = true
+            end
+        end
+    end
+
+    if not triggered then
+        local allFound = true
+        for name, _ in pairs(TargetPickaxes) do
+            if not FoundPickaxes[name] then
+                allFound = false
+                break
+            end
+        end
+
+        if allFound then
+            triggered = true
+            if _G.Horst_AccountChangeDone then
+                _G.Horst_AccountChangeDone()
             end
         end
     end
