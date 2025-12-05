@@ -12,8 +12,10 @@ local Replica = PlayerController.Replica
 
 repeat task.wait() until Replica and Replica.Data and Replica.Data.Inventory
 
+local LoadTime = tick() - StartTime
+print("✅ LOADED = true (Load Time:", string.format("%.2f", LoadTime), "seconds)")
+
 getgenv().LOADED = true
-print("LOADED = true")
 
 
 local function GetPlayerLevel(Replica)
