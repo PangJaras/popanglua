@@ -14,7 +14,7 @@ local CHECK_INTERVAL = 3
 local COUNTDOWN_TIME = 180
 
 getgenv().LOADED = true
-warn("[", os.date("%H:%M:%S"), "] LOADED = true")
+warn("[", os.date("%H:%M:%S"), "] LOADEDCHECK = true")
 
 while task.wait(CHECK_INTERVAL) do
     print("[System] Working... Checking gold changes...")
