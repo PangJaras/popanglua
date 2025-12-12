@@ -1,5 +1,4 @@
 repeat task.wait(1) until game:IsLoaded()
-repeat task.wait() until _G.Horst_SetDescription and _G.DataConfigs
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
