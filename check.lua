@@ -10,7 +10,7 @@ local Gold = Main and Main.Screen.Hud.Gold
 
 local oldMoney = Gold.Text
 
-local CHECK_TIME = 60 * 1  -- 300 วินาที
+local CHECK_TIME = 60 * 5  -- 300 วินาที
 
 print("[ระบบเช็คเงิน] เริ่มทำงานแล้ว")
 print("[ระบบเช็คเงิน] ค่าเริ่มต้น:", oldMoney)
