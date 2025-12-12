@@ -11,7 +11,7 @@ local Gold = Main and Main.Screen.Hud.Gold
 local oldMoney = Gold.Text
 
 local CHECK_INTERVAL = 3
-local COUNTDOWN_TIME = 1800
+local COUNTDOWN_TIME = 300
 
 getgenv().LOADED = true
 warn("[", os.date("%H:%M:%S"), "] LOADEDCHECK = true")
