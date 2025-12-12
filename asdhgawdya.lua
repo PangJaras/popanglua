@@ -1,7 +1,7 @@
 repeat task.wait() until game:IsLoaded()
 
 getgenv().LOADED = true
-warn("[", os.date("%H:%M:%S"), "] LOADED = true")
+warn("[", os.date("%H:%M:%S"), "] LOADEDLOGSTEP1 = true")
 
 repeat
     task.wait(0.1)
@@ -19,7 +19,7 @@ local Replica = PlayerController.Replica
 repeat task.wait() until Replica and Replica.Data and Replica.Data.Inventory
 
 getgenv().LOADED = true
-warn("[", os.date("%H:%M:%S"), "] LOADED = true")
+warn("[", os.date("%H:%M:%S"), "] LOADEDLOGSTEP2 = true")
 
 local function GetPlayerLevel(Replica)
     if not Replica or not Replica.Data then
