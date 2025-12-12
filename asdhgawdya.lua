@@ -1,7 +1,11 @@
+repeat task.wait() until game:IsLoaded()
+
+getgenv().LOADED = true
+warn("[", os.date("%H:%M:%S"), "] LOADED = true")
+
 repeat
-    task.wait()
-until game:IsLoaded()
-repeat task.wait() until _G.Horst_SetDescription and _G.DataConfigs
+    task.wait(0.1)
+until game:IsLoaded() and _G.Horst_SetDescription and _G.DataConfigs
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -13,7 +17,9 @@ local PlayerController = Knit.GetController("PlayerController")
 local Replica = PlayerController.Replica
 
 repeat task.wait() until Replica and Replica.Data and Replica.Data.Inventory
-warn("[", os.date("%H:%M:%S"), "] Runnnnnnnnnnnnnnnnnnn")
+
+getgenv().LOADED = true
+warn("[", os.date("%H:%M:%S"), "] LOADED = true")
 
 local function GetPlayerLevel(Replica)
     if not Replica or not Replica.Data then
