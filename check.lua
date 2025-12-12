@@ -1,5 +1,5 @@
 repeat
-    task.wait(5)
+    task.wait(15)
 until game:IsLoaded()
 
 local Players = game:GetService("Players")
@@ -10,29 +10,32 @@ local Gold = Main and Main.Screen.Hud.Gold
 
 local oldMoney = Gold.Text
 
-local CHECK_INTERVAL = 3
-local COUNTDOWN_TIME = 300
+local CHECK_TIME = 60 * 5  -- 300 วินาที
+
+print("[ระบบเช็คเงิน] เริ่มทำงานแล้ว")
+print("[ระบบเช็คเงิน] ค่าเริ่มต้น:", oldMoney)
 
 getgenv().LOADED = true
-warn("[", os.date("%H:%M:%S"), "] LOADEDCHECK = true")
+warn("[", os.date("%H:%M:%S"), "] LOADEDCHECKSUCCESSFULLY = true")
 
-while task.wait(CHECK_INTERVAL) do
-    print("[System] Working... Checking gold changes...")
+while true do
+    -- นับถอยหลัง 300 วินาที
+    for i = CHECK_TIME, 1, -1 do
+        print("[ระบบเช็คเงิน] ตรวจอีก:", i, "วินาที")
+        task.wait(1)
+    end
 
+    -- ตรวจเงิน
     pcall(function()
         local newMoney = Gold.Text
 
+        print("[ระบบเช็คเงิน] ค่าเดิม:", oldMoney, " | ค่าใหม่:", newMoney)
+
         if newMoney == oldMoney then
-            warn("No change in coins detected! Starting countdown to kick...")
-
-            for i = COUNTDOWN_TIME, 1, -1 do
-                warn("Kicking in " .. i .. " seconds... (System Running)")
-                task.wait(1)
-            end
-
+            warn("[ระบบเช็คเงิน] ไม่พบการเปลี่ยนแปลงของเงิน → Rejoin…")
             LocalPlayer:Kick("\nRejoining due to no coin change...")
         else
-            print("[System] Gold changed! System running normally.")
+            print("[ระบบเช็คเงิน] เงินเปลี่ยนแปลง → อัปเดตค่าใหม่")
             oldMoney = newMoney
         end
     end)
