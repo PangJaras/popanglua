@@ -7,7 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = Players.LocalPlayer
 local CommF = ReplicatedStorage.Remotes.CommF_
 
-local CFG = getgenv().Config
+local CFG = getgenv().PoPangConfig
 
 local lastDescTime = 0
 local lastChangeTime = 0
