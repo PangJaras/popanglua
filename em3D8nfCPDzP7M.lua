@@ -96,7 +96,7 @@ task.spawn(function()
             and _G.Horst_AccountChangeDone
             and now - lastChangeTime >= 15
         then
-            warn("[POPANG] เงื่อนไขครบตาม Config → AccountChangeDone()")
+            warn("[POPANG] เงื่อนไขครบตาม Config → DONE")
             _G.Horst_AccountChangeDone()
             lastChangeTime = now
         end
