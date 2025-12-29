@@ -1,7 +1,7 @@
 _G.targetName = { "Archangel", "Demon", "Angel" } -- Developer, Orc, Demon, Vampire, Undead, Felynx, Zombie, Archangel, Fairy, Minotaur, Dragonborn, Dwarf, Shadow, Angel, Elf, Golem, Human, Orc Lord, Goblin
 _G.codes = { "XMAS!", "SORRYFORDELAY" }
 
-repeat task.wait(.1) until game:IsLoaded()
+repeat task.wait(1) until game:IsLoaded()
 local Players = game:GetService("Players")
 local plr = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
