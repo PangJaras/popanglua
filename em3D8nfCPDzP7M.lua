@@ -12,9 +12,6 @@ local CFG = getgenv().PoPangConfig
 local lastDescTime = 0
 local lastChangeTime = 0
 
-local waitingDone = false
-local doneStartTime = 0
-
 local function GetSanguineArtMastery()
     local backpack = LocalPlayer:FindFirstChild("Backpack")
     local character = LocalPlayer.Character
@@ -41,7 +38,6 @@ local function GetLeviathanHeartCount()
     return count
 end
 
-
 local function BuildDescription(hasMelee, mastery, heartCount, isBoat)
     if heartCount > 0 and isBoat then
         return string.format("🚢 Helper Boat , ❤️ Leviathan Heart x%d", heartCount)
@@ -58,6 +54,13 @@ local function BuildDescription(hasMelee, mastery, heartCount, isBoat)
     return meleeText .. " , " .. heartText
 end
 
+-- ✅ ฟังก์ชัน Update Description กลาง
+local function UpdateDescription(hasMelee, mastery, heartCount, isBoat)
+    _G.Horst_SetDescription(
+        BuildDescription(hasMelee, mastery, heartCount, isBoat)
+    )
+    lastDescTime = os.clock()
+end
 
 task.spawn(function()
     while true do
@@ -69,11 +72,9 @@ task.spawn(function()
         local heartCount = GetLeviathanHeartCount()
         local isBoat = CFG.EXCLUDE_USERNAMES[LocalPlayer.Name] == true
 
+        -- 🔁 Update Description ปกติทุก 5 วิ
         if now - lastDescTime >= 5 then
-            _G.Horst_SetDescription(
-                BuildDescription(hasMelee, mastery, heartCount, isBoat)
-            )
-            lastDescTime = now
+            UpdateDescription(hasMelee, mastery, heartCount, isBoat)
         end
 
         local meleeOK = true
@@ -97,6 +98,10 @@ task.spawn(function()
             and now - lastChangeTime >= 15
         then
             warn("[POPANG] เงื่อนไขครบตาม Config → DONE")
+
+            -- ✅ บังคับ UpdateDescription ก่อน DONE ทุกครั้ง
+            UpdateDescription(hasMelee, mastery, heartCount, isBoat)
+
             _G.Horst_AccountChangeDone()
             lastChangeTime = now
         end
