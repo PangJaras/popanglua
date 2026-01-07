@@ -12,6 +12,11 @@ local CFG = getgenv().PoPangConfig
 local lastDescTime = 0
 local lastChangeTime = 0
 
+
+local waitingForDone = false
+local waitStartTime = 0
+
+
 local function GetSanguineArtMastery()
     local backpack = LocalPlayer:FindFirstChild("Backpack")
     local character = LocalPlayer.Character
@@ -54,13 +59,6 @@ local function BuildDescription(hasMelee, mastery, heartCount, isBoat)
     return meleeText .. " , " .. heartText
 end
 
--- ✅ ฟังก์ชัน Update Description กลาง
-local function UpdateDescription(hasMelee, mastery, heartCount, isBoat)
-    _G.Horst_SetDescription(
-        BuildDescription(hasMelee, mastery, heartCount, isBoat)
-    )
-    lastDescTime = os.clock()
-end
 
 task.spawn(function()
     while true do
@@ -72,10 +70,14 @@ task.spawn(function()
         local heartCount = GetLeviathanHeartCount()
         local isBoat = CFG.EXCLUDE_USERNAMES[LocalPlayer.Name] == true
 
-        -- 🔁 Update Description ปกติทุก 5 วิ
+
         if now - lastDescTime >= 5 then
-            UpdateDescription(hasMelee, mastery, heartCount, isBoat)
+            _G.Horst_SetDescription(
+                BuildDescription(hasMelee, mastery, heartCount, isBoat)
+            )
+            lastDescTime = now
         end
+
 
         local meleeOK = true
         local heartOK = true
@@ -92,17 +94,29 @@ task.spawn(function()
             (not CFG.Sanguine_Art or meleeOK)
             and (not CFG.Leviathan_Heart or heartOK)
 
+
+        if allConditionsOK and not waitingForDone then
+            warn("[POPANG] เงื่อนไขครบตาม Config → รอ 15 วิ ก่อน DONE")
+
+
+            _G.Horst_SetDescription(
+                BuildDescription(hasMelee, mastery, heartCount, isBoat)
+            )
+            lastDescTime = now
+
+            waitingForDone = true
+            waitStartTime = now
+        end
+
         if
-            allConditionsOK
+            waitingForDone
             and _G.Horst_AccountChangeDone
-            and now - lastChangeTime >= 15
+            and (now - waitStartTime >= 15)
         then
-            warn("[POPANG] เงื่อนไขครบตาม Config → DONE")
-
-            -- ✅ บังคับ UpdateDescription ก่อน DONE ทุกครั้ง
-            UpdateDescription(hasMelee, mastery, heartCount, isBoat)
-
+            warn("[POPANG] ครบ 15 วิ → DONE")
             _G.Horst_AccountChangeDone()
+
+            waitingForDone = false
             lastChangeTime = now
         end
     end
